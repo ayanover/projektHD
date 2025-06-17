@@ -67,13 +67,11 @@ const SalesAnalyticsDashboard = () => {
   const analytics = useMemo(() => {
     if (data.length === 0) return null;
 
-    // Basic statistics
     const totalRevenue = data.reduce((sum, record) => sum + record.money, 0);
     const totalOrders = data.length;
     const avgOrderValue = totalRevenue / totalOrders;
     const uniqueCustomers = new Set(data.map(record => record.card)).size;
 
-    // Coffee type analysis
     const coffeeStats = data.reduce((acc, record) => {
       const coffee = record.coffee_name;
       if (!acc[coffee]) {
@@ -92,7 +90,6 @@ const SalesAnalyticsDashboard = () => {
       avgPrice: parseFloat(stats.avgPrice.toFixed(2))
     }));
 
-    // Hourly analysis
     const hourlyStats = data.reduce((acc, record) => {
       const hour = record.hour;
       if (!acc[hour]) {
@@ -109,7 +106,6 @@ const SalesAnalyticsDashboard = () => {
       revenue: hourlyStats[hour]?.revenue || 0
     })).filter(item => item.orders > 0);
 
-    // Payment method analysis
     const paymentStats = data.reduce((acc, record) => {
       const method = record.cash_type;
       if (!acc[method]) {
@@ -127,7 +123,6 @@ const SalesAnalyticsDashboard = () => {
       percentage: ((stats.count / totalOrders) * 100).toFixed(1)
     }));
 
-    // Customer frequency analysis
     const customerFrequency = data.reduce((acc, record) => {
       const customer = record.card;
       acc[customer] = (acc[customer] || 0) + 1;
@@ -147,7 +142,6 @@ const SalesAnalyticsDashboard = () => {
       customers: count
     }));
 
-    // Price vs Volume correlation
     const priceVolumeData = coffeeChartData.map(item => ({
       coffee: item.name,
       price: item.avgPrice,
@@ -169,7 +163,6 @@ const SalesAnalyticsDashboard = () => {
 
   const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#0088fe', '#00c49f'];
 
-  // File upload screen
   if (data.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -223,11 +216,9 @@ const SalesAnalyticsDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="mb-8 flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Sales Analytics Dashboard</h1>
-            <p className="text-gray-600">Discover correlations and insights in your coffee shop sales data</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Analityka Sprzedaży</h1>
           </div>
           <button
             onClick={() => setData([])}
@@ -237,12 +228,11 @@ const SalesAnalyticsDashboard = () => {
           </button>
         </div>
 
-        {/* Key Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
           <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">Total Revenue</p>
+                <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">Przychód łącznie</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">${analytics.totalRevenue.toFixed(2)}</p>
               </div>
               <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-green-600 rounded-xl flex items-center justify-center">
@@ -254,7 +244,7 @@ const SalesAnalyticsDashboard = () => {
           <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">Total Orders</p>
+                <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">Zamówienia</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{analytics.totalOrders.toLocaleString()}</p>
               </div>
               <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-blue-600 rounded-xl flex items-center justify-center">
@@ -266,7 +256,7 @@ const SalesAnalyticsDashboard = () => {
           <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">Avg Order Value</p>
+                <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">Średnia wartość zamówienia</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">${analytics.avgOrderValue.toFixed(2)}</p>
               </div>
               <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-purple-600 rounded-xl flex items-center justify-center">
@@ -278,7 +268,7 @@ const SalesAnalyticsDashboard = () => {
           <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">Unique Customers</p>
+                <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">Wyjątkowych klientów</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{analytics.uniqueCustomers.toLocaleString()}</p>
               </div>
               <div className="w-12 h-12 bg-gradient-to-r from-orange-400 to-orange-600 rounded-xl flex items-center justify-center">
@@ -288,15 +278,13 @@ const SalesAnalyticsDashboard = () => {
           </div>
         </div>
 
-        {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          {/* Coffee Sales Analysis */}
           <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-white/20">
             <div className="flex items-center mb-6">
               <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-3">
                 <Coffee className="h-5 w-5 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-800">Coffee Types - Sales & Revenue</h3>
+              <h3 className="text-xl font-semibold text-gray-800">Przychód według rodzaju kawy</h3>
             </div>
             <ResponsiveContainer width="100%" height={320}>
               <BarChart data={analytics.coffeeChartData}>
@@ -319,13 +307,12 @@ const SalesAnalyticsDashboard = () => {
             </ResponsiveContainer>
           </div>
 
-          {/* Hourly Sales Pattern */}
           <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-white/20">
             <div className="flex items-center mb-6">
               <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-teal-500 rounded-lg flex items-center justify-center mr-3">
                 <Clock className="h-5 w-5 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-800">Hourly Sales Pattern</h3>
+              <h3 className="text-xl font-semibold text-gray-800">Zestawienie wartości zamówień z czasem zakupów.</h3>
             </div>
             <ResponsiveContainer width="100%" height={320}>
               <LineChart data={analytics.hourlyChartData}>
@@ -348,13 +335,12 @@ const SalesAnalyticsDashboard = () => {
             </ResponsiveContainer>
           </div>
 
-          {/* Payment Method Distribution */}
           <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-white/20">
             <div className="flex items-center mb-6">
               <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-3">
                 <CreditCard className="h-5 w-5 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-800">Payment Method Distribution</h3>
+              <h3 className="text-xl font-semibold text-gray-800">Rodzaje płatności</h3>
             </div>
             <ResponsiveContainer width="100%" height={320}>
               <PieChart>
@@ -384,13 +370,12 @@ const SalesAnalyticsDashboard = () => {
             </ResponsiveContainer>
           </div>
 
-          {/* Customer Frequency Analysis */}
           <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-white/20">
             <div className="flex items-center mb-6">
               <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center mr-3">
                 <Users className="h-5 w-5 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-800">Customer Visit Frequency</h3>
+              <h3 className="text-xl font-semibold text-gray-800">Częstotliwość wizyt</h3>
             </div>
             <ResponsiveContainer width="100%" height={320}>
               <BarChart data={analytics.customerFrequencyData}>
@@ -411,13 +396,12 @@ const SalesAnalyticsDashboard = () => {
           </div>
         </div>
 
-        {/* Price vs Volume Correlation */}
         <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-white/20 mb-8">
           <div className="flex items-center mb-6">
             <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-lg flex items-center justify-center mr-3">
               <TrendingUp className="h-5 w-5 text-white" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-800">Price vs Volume Correlation</h3>
+            <h3 className="text-xl font-semibold text-gray-800">Porównanie cen i ilości zamówień</h3>
           </div>
           <ResponsiveContainer width="100%" height={320}>
             <BarChart data={analytics.priceVolumeData}>
@@ -440,61 +424,60 @@ const SalesAnalyticsDashboard = () => {
           </ResponsiveContainer>
         </div>
 
-        {/* Insights Summary */}
         <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-white/20">
           <div className="flex items-center mb-6">
             <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-rose-500 rounded-lg flex items-center justify-center mr-3">
               <BarChart3 className="h-5 w-5 text-white" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-800">Key Insights</h3>
+            <h3 className="text-xl font-semibold text-gray-800">Główne wnioski</h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
               <div className="flex items-center mb-3">
                 <Coffee className="h-5 w-5 text-blue-600 mr-2" />
-                <h4 className="font-semibold text-gray-900">Top Performing Coffee</h4>
+                <h4 className="font-semibold text-gray-900">Najlepszy produkt</h4>
               </div>
               <p className="text-gray-700 leading-relaxed">
                 <span className="font-semibold text-blue-600">
                   {analytics.coffeeChartData.reduce((top, current) =>
                     current.revenue > top.revenue ? current : top
                   ).name}
-                </span> generates the highest revenue with ${analytics.coffeeChartData.reduce((top, current) =>
+                </span> generuje największą sprzedaż wynoszącą łącznie {analytics.coffeeChartData.reduce((top, current) =>
                   current.revenue > top.revenue ? current : top
-                ).revenue.toFixed(2)} total
+                ).revenue.toFixed(2)} $/zł.
               </p>
             </div>
             <div className="p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-100">
               <div className="flex items-center mb-3">
                 <Clock className="h-5 w-5 text-green-600 mr-2" />
-                <h4 className="font-semibold text-gray-900">Peak Hours</h4>
+                <h4 className="font-semibold text-gray-900">Godziny Szczytu</h4>
               </div>
               <p className="text-gray-700 leading-relaxed">
                 <span className="font-semibold text-green-600">
                   {analytics.hourlyChartData.reduce((peak, current) =>
                     current.orders > peak.orders ? current : peak
                   ).hour}
-                </span> is your busiest hour with {analytics.hourlyChartData.reduce((peak, current) =>
+                </span> jest godziną z największym ruchem, z {analytics.hourlyChartData.reduce((peak, current) =>
                   current.orders > peak.orders ? current : peak
-                ).orders} orders
+                ).orders} zamówieniami.
               </p>
             </div>
             <div className="p-6 bg-gradient-to-br from-purple-50 to-violet-50 rounded-xl border border-purple-100">
               <div className="flex items-center mb-3">
                 <Users className="h-5 w-5 text-purple-600 mr-2" />
-                <h4 className="font-semibold text-gray-900">Customer Loyalty</h4>
+                <h4 className="font-semibold text-gray-900">Liczebność klientów</h4>
               </div>
               <p className="text-gray-700 leading-relaxed">
-                <span className="font-semibold text-purple-600">{analytics.uniqueCustomers}</span> unique customers with <span className="font-semibold text-purple-600">{analytics.totalOrders}</span> total orders ({(analytics.totalOrders / analytics.uniqueCustomers).toFixed(1)} orders per customer)
+                <span className="font-semibold text-purple-600">{analytics.uniqueCustomers}</span> wyjątkowych klientów z <span className="font-semibold text-purple-600">{analytics.totalOrders}</span> zamówieniami ({(analytics.totalOrders / analytics.uniqueCustomers).toFixed(1)} ozamówień na osobę)
               </p>
             </div>
             <div className="p-6 bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl border border-orange-100">
               <div className="flex items-center mb-3">
                 <DollarSign className="h-5 w-5 text-orange-600 mr-2" />
-                <h4 className="font-semibold text-gray-900">Average Transaction</h4>
+                <h4 className="font-semibold text-gray-900">Typowa transakcja</h4>
               </div>
               <p className="text-gray-700 leading-relaxed">
-                <span className="font-semibold text-orange-600">${analytics.avgOrderValue.toFixed(2)}</span> per order across all coffee types with consistent pricing patterns
+                <span className="font-semibold text-orange-600">${analytics.avgOrderValue.toFixed(2)}</span> średnio na zamówienie
               </p>
             </div>
           </div>
